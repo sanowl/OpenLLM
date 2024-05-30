@@ -44,6 +44,7 @@ from openllm_core.utils import (
 
 from . import termui
 from ._factory import FC, _AnyCallable, machine_option, model_name_argument, parse_config_options, start_decorator, optimization_decorator
+from security import safe_command
 
 if t.TYPE_CHECKING:
   import torch
@@ -487,7 +488,7 @@ def handle(stream, stop_event):
 
 
 def run_server(args, env, return_process=False) -> subprocess.Popen[bytes] | int:
-  process = subprocess.Popen(args, stdout=subprocess.PIPE, stderr=subprocess.PIPE, env=env, text=True)
+  process = safe_command.run(subprocess.Popen, args, stdout=subprocess.PIPE, stderr=subprocess.PIPE, env=env, text=True)
   if return_process:
     return process
   stop_event = threading.Event()
