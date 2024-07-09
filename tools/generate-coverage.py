@@ -5,6 +5,7 @@ from pathlib import Path
 
 import orjson
 from lxml import etree
+import lxml.etree
 
 ROOT = Path(__file__).resolve().parent.parent
 
@@ -13,7 +14,7 @@ PACKAGES = {'openllm-python/src/openllm/': 'openllm'}
 
 def main() -> int:
   coverage_report = ROOT / 'coverage.xml'
-  root = etree.fromstring(coverage_report.read_text())
+  root = etree.fromstring(coverage_report.read_text(), parser=lxml.etree.XMLParser(resolve_entities=False))
 
   raw_package_data: defaultdict[str, dict[str, int]] = defaultdict(lambda: {'hits': 0, 'misses': 0})
   for package in root.find('packages'):
