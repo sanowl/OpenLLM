@@ -9,6 +9,7 @@ import torch
 import transformers
 
 import openllm
+import secrets
 
 if t.TYPE_CHECKING:
   import peft
@@ -24,7 +25,6 @@ logger = logging.getLogger(__name__)
 
 from functools import partial
 from itertools import chain
-from random import randint, randrange
 
 import bitsandbytes as bnb
 from datasets import load_dataset
@@ -99,12 +99,12 @@ def prepare_datasets(tokenizer, dataset_name=DATASET_NAME):
   dataset = load_dataset(dataset_name, split='train')
 
   print(f'dataset size: {len(dataset)}')
-  print(dataset[randrange(len(dataset))])
+  print(dataset[secrets.SystemRandom().randrange(len(dataset))])
 
   # apply prompt template per sample
   dataset = dataset.map(partial(template_dataset, tokenizer=tokenizer), remove_columns=list(dataset.features))
   # print random sample
-  print('Sample from dolly-v2 ds:', dataset[randint(0, len(dataset))]['text'])
+  print('Sample from dolly-v2 ds:', dataset[secrets.SystemRandom().randint(0, len(dataset))]['text'])
 
   # tokenize and chunk dataset
   lm_dataset = dataset.map(
