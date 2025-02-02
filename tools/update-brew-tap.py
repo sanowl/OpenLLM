@@ -54,7 +54,7 @@ def main() -> int:
     trim_blocks=True,
     lstrip_blocks=True,
     loader=FileSystemLoader((ROOT / 'Formula').__fspath__(), followlinks=True),
-  )
+  autoescape=True)
   template_file = 'openllm.rb.j2'
   with (ROOT / 'Formula' / 'openllm.rb').open('w') as f:
     f.write(
