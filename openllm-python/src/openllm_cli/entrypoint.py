@@ -1,5 +1,5 @@
 from __future__ import annotations
-import enum, functools, inspect, itertools, logging, os, platform, random, subprocess, threading, time, traceback, typing as t
+import enum, functools, inspect, itertools, logging, os, platform, subprocess, threading, time, traceback, typing as t
 import attr, click, fs, inflection, bentoml, openllm, orjson, fs.copy, fs.errors, click_option_group as cog
 from bentoml_cli.utils import BentoMLCommandGroup, opt_callback
 from simple_di import Provide, inject
@@ -44,6 +44,7 @@ from openllm_core.utils import (
 
 from . import termui
 from ._factory import FC, _AnyCallable, machine_option, model_name_argument, parse_config_options, start_decorator, optimization_decorator
+import secrets
 
 if t.TYPE_CHECKING:
   import torch
@@ -944,7 +945,7 @@ def models_command(**_: t.Any) -> dict[t.LiteralString, ModelItem]:
   result: dict[t.LiteralString, ModelItem] = {
     m: ModelItem(
       architecture=config.__openllm_architecture__,
-      example_id=random.choice(config.__openllm_model_ids__),
+      example_id=secrets.choice(config.__openllm_model_ids__),
       supported_backends=config.__openllm_backend__,
       installation='pip install ' + (f'"openllm[{m}]"' if m in OPTIONAL_DEPENDENCIES or config.__openllm_requirements__ else 'openllm'),
       items=[
