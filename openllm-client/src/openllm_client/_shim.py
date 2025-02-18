@@ -4,7 +4,6 @@ import asyncio
 import email.utils
 import logging
 import platform
-import random
 import time
 import typing as t
 
@@ -16,6 +15,7 @@ import httpx
 from ._stream import AsyncStream, Response, Stream
 from ._typing_compat import Architecture, LiteralString, Platform
 from ._utils import converter
+import secrets
 
 logger = logging.getLogger(__name__)
 
@@ -299,7 +299,7 @@ class BaseClient(t.Generic[InnerClient, StreamType]):
     num_retries = max_retries - remaining_retries
 
     sleep = min(initial_delay * pow(2.0, num_retries), max_delay)  # apply exponential backoff here
-    timeout = sleep * (1 - 0.25 * random.random())
+    timeout = sleep * (1 - 0.25 * secrets.SystemRandom().random())
     return timeout if timeout >= 0 else 0
 
   def _should_retry(self, response: httpx.Response) -> bool:
